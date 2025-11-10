@@ -10,6 +10,14 @@ const App = () => {
       <form
         onSubmit={(event) => {
           event.preventDefault();
+
+          for (let person of persons) {
+            if (newName.toLowerCase() === person.name.toLowerCase()) {
+              alert(`${newName} is already added to phonebook`);
+              setNewName("");
+              return;
+            }
+          }
           setPersons([...persons, { name: newName }]);
           setNewName("");
         }}
