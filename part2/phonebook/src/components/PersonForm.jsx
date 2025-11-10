@@ -1,4 +1,4 @@
-import axios from "axios";
+import { create } from "../services/persons";
 
 export const PersonForm = ({
   persons,
@@ -22,17 +22,12 @@ export const PersonForm = ({
           }
         }
 
-        axios
-          .post("http://localhost:3001/persons", {
-            name: newName,
-            number: newNumber,
-          })
-          .then((response) => {
-            setPersons(persons.concat(response.data));
-            setNewName("");
-            setNewNumber("");
-            setSearch("");
-          });
+        create({ name: newName, number: newNumber }).then((data) => {
+          setPersons(persons.concat(data));
+          setNewName("");
+          setNewNumber("");
+          setSearch("");
+        });
       }}
     >
       <div>
