@@ -16,3 +16,9 @@ export const remove = (id) => {
   const request = axios.delete(url);
   return request.then((response) => response.data);
 };
+
+export const update = (id, personObject) => {
+  const url = `${baseUrl}/${id}`;
+  const request = axios.put(url, personObject);
+  return request.then((response) => response.data);
+};

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Filter } from "./components/Filter";
 import { PersonForm } from "./components/PersonForm";
 import { Persons } from "./components/Persons";
-import { create, getAll, remove } from "./services/persons";
+import { create, getAll, remove, update } from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -25,8 +25,7 @@ const App = () => {
 
     for (let person of persons) {
       if (newName.toLowerCase() === person.name.toLowerCase()) {
-        alert(`${newName} is already added to phonebook`);
-        setNewName("");
+        handleUpdate(person);
         return;
       }
     }
@@ -47,6 +46,18 @@ const App = () => {
     }
   };
 
+  const handleUpdate = (person) => {
+    if (
+      window.confirm(
+        `${person.name} is already added to phonebook, replace the old number with a new one?`
+      )
+    ) {
+      update(person.id, { name: newName, number: newNumber }).then((data) =>
+        setPersons(persons.map((p) => (p.id === person.id ? data : p)))
+      );
+    }
+  };
+
   return (
     <div>
       <h1>Phonebook</h1>
@@ -56,11 +67,11 @@ const App = () => {
       <h2>add a new</h2>
 
       <PersonForm
-        newName={newName}
-        newNumber={newNumber}
-        setNewName={setNewName}
-        setNewNumber={setNewNumber}
         handleCreate={handleCreate}
+        setNewName={setNewName}
+        newName={newName}
+        setNewNumber={setNewNumber}
+        newNumber={newNumber}
       />
 
       <h2>Numbers</h2>
