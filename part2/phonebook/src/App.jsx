@@ -3,12 +3,17 @@ import { Filter } from "./components/Filter";
 import { PersonForm } from "./components/PersonForm";
 import { Persons } from "./components/Persons";
 import { create, getAll, remove, update } from "./services/persons";
+import { Notification } from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
+  const [notification, setNotification] = useState({
+    message: null,
+    isError: false,
+  });
 
   useEffect(() => {
     getAll().then((data) => {
@@ -35,6 +40,11 @@ const App = () => {
       setNewName("");
       setNewNumber("");
       setSearch("");
+      setNotification({ message: `Added ${newName}`, isError: false });
+      setTimeout(
+        () => setNotification({ message: null, isError: false }),
+        3000
+      );
     });
   };
 
@@ -52,15 +62,41 @@ const App = () => {
         `${person.name} is already added to phonebook, replace the old number with a new one?`
       )
     ) {
-      update(person.id, { name: newName, number: newNumber }).then((data) =>
-        setPersons(persons.map((p) => (p.id === person.id ? data : p)))
-      );
+      update(person.id, { name: newName, number: newNumber })
+        .then((data) => {
+          setPersons(persons.map((p) => (p.id === person.id ? data : p)));
+          setNotification({ message: `Updated ${newName}`, isError: false });
+          setTimeout(
+            () => setNotification({ message: null, isError: false }),
+            3000
+          );
+        })
+        .catch((error) => {
+          setNotification({
+            message: `Information of ${person.name} has already been removed from the server`,
+            isError: true,
+          });
+          setTimeout(
+            () => setNotification({ message: null, isError: false }),
+            3000
+          );
+          setPersons(persons.filter((p) => p.id !== person.id));
+          setNewName("");
+          setNewNumber("");
+        });
     }
   };
 
   return (
     <div>
       <h1>Phonebook</h1>
+
+      {Boolean(notification?.message) && (
+        <Notification
+          message={notification.message}
+          isError={notification.isError}
+        />
+      )}
 
       <Filter search={search} setSearch={setSearch} />
 
