@@ -1,7 +1,7 @@
-export const Person = ({ name, number }) => {
+export const Person = ({ name, number, handleDelete }) => {
   return (
     <div>
-      {name} {number}
+      {name} {number} <button onClick={handleDelete}>delete</button>
     </div>
   );
 };

@@ -1,35 +1,12 @@
-import { create } from "../services/persons";
-
 export const PersonForm = ({
-  persons,
-  newName,
-  newNumber,
-  setPersons,
+  handleCreate,
   setNewName,
+  newName,
   setNewNumber,
-  setSearch,
+  newNumber,
 }) => {
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-
-        for (let person of persons) {
-          if (newName.toLowerCase() === person.name.toLowerCase()) {
-            alert(`${newName} is already added to phonebook`);
-            setNewName("");
-            return;
-          }
-        }
-
-        create({ name: newName, number: newNumber }).then((data) => {
-          setPersons(persons.concat(data));
-          setNewName("");
-          setNewNumber("");
-          setSearch("");
-        });
-      }}
-    >
+    <form onSubmit={handleCreate}>
       <div>
         name:{" "}
         <input

@@ -10,3 +10,9 @@ export const create = (newObject) => {
   const request = axios.post(baseUrl, newObject);
   return request.then((response) => response.data);
 };
+
+export const remove = (id) => {
+  const url = `${baseUrl}/${id}`;
+  const request = axios.delete(url);
+  return request.then((response) => response.data);
+};

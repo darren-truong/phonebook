@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Filter } from "./components/Filter";
 import { PersonForm } from "./components/PersonForm";
 import { Persons } from "./components/Persons";
-import { getAll } from "./services/persons";
+import { create, getAll, remove } from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -20,6 +20,33 @@ const App = () => {
     person.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleCreate = (event) => {
+    event.preventDefault();
+
+    for (let person of persons) {
+      if (newName.toLowerCase() === person.name.toLowerCase()) {
+        alert(`${newName} is already added to phonebook`);
+        setNewName("");
+        return;
+      }
+    }
+
+    create({ name: newName, number: newNumber }).then((data) => {
+      setPersons(persons.concat(data));
+      setNewName("");
+      setNewNumber("");
+      setSearch("");
+    });
+  };
+
+  const handleDelete = (person) => {
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      remove(person.id).then((data) =>
+        setPersons(persons.filter((p) => p.id !== person.id))
+      );
+    }
+  };
+
   return (
     <div>
       <h1>Phonebook</h1>
@@ -29,18 +56,16 @@ const App = () => {
       <h2>add a new</h2>
 
       <PersonForm
-        persons={persons}
         newName={newName}
         newNumber={newNumber}
-        setPersons={setPersons}
         setNewName={setNewName}
         setNewNumber={setNewNumber}
-        setSearch={setSearch}
+        handleCreate={handleCreate}
       />
 
       <h2>Numbers</h2>
 
-      <Persons filteredPersons={filteredPersons} />
+      <Persons filteredPersons={filteredPersons} handleDelete={handleDelete} />
     </div>
   );
 };
