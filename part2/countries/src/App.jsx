@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Country } from "./components/Country";
 
 function App() {
   const [search, setSearch] = useState("");
@@ -23,29 +24,16 @@ function App() {
     searchResults = (
       <div>
         {filteredCountries.map((country) => (
-          <div>{country.name.common}</div>
+          <div>
+            {country.name.common}{" "}
+            <button onClick={() => setSearch(country.name.common)}>Show</button>
+          </div>
         ))}
       </div>
     );
   } else if (filteredCountries.length === 1) {
     const country = filteredCountries[0];
-    searchResults = (
-      <div>
-        <h1>{country.name.common}</h1>
-        <p>
-          Capital {country.capital[0]}
-          <br />
-          Area {country.area}
-        </p>
-        <h2>Languages</h2>
-        <ul>
-          {Object.values(country.languages).map((language) => (
-            <li key={language}>{language}</li>
-          ))}
-        </ul>
-        <img src={country.flags.png} />
-      </div>
-    );
+    searchResults = <Country country={country} />;
   } else {
     searchResults = <div>No matches found</div>;
   }
