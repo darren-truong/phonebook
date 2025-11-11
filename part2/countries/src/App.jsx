@@ -24,7 +24,7 @@ function App() {
     searchResults = (
       <div>
         {filteredCountries.map((country) => (
-          <div>
+          <div key={country.name.official}>
             {country.name.common}{" "}
             <button onClick={() => setSearch(country.name.common)}>Show</button>
           </div>
