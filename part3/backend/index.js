@@ -40,6 +40,34 @@ app.get("/api/persons/:id", (request, response) => {
 app.post("/api/persons", (request, response) => {
   const body = request.body;
 
+  if (!body.name && !body.number) {
+    return response.status(400).json({
+      error: "name and number missing",
+    });
+  }
+
+  if (!body.name) {
+    return response.status(400).json({
+      error: "name missing",
+    });
+  }
+
+  if (!body.number) {
+    return response.status(400).json({
+      error: "number missing",
+    });
+  }
+
+  if (
+    phoneBook.some(
+      (person) => person.name.toLowerCase() === body.name.toLowerCase()
+    )
+  ) {
+    return response.status(400).json({
+      error: "name must be unique",
+    });
+  }
+
   const person = {
     id: Math.floor(Math.random() * 1000) + 1,
     name: body.name,
