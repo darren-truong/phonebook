@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 
-let notes = [
+let phoneBook = [
   {
     id: "1",
     name: "Arto Hellas",
@@ -24,12 +24,21 @@ let notes = [
   },
 ];
 
-app.get("/api/persons", (request, response) => response.json(notes));
+app.get("/api/persons", (request, response) => response.json(phoneBook));
+
+app.get("/api/persons/:id", (request, response) => {
+  const id = request.params.id;
+  const person = phoneBook.find((person) => person.id === id);
+  if (person === undefined) {
+    response.sendStatus(404);
+  }
+  response.json(person);
+});
 
 app.get("/info", (request, response) => {
   const date = new Date().toString();
   const html = `
-    <p>Phonebook has info for ${notes.length} people</p>
+    <p>Phonebook has info for ${phoneBook.length} people</p>
     <p>${date}</p>
   `;
   response.send(html);
