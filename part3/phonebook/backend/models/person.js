@@ -22,7 +22,16 @@ const personSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  number: String,
+  number: {
+    type: String,
+    minlength: 8,
+    required: true,
+    validate: {
+      validator: (v) => /^\d{2,3}-\d+$/.test(v),
+      message: () =>
+        "The phone number must be at least 8 characters long and must contain a hyphen after the second or third digit (e.g., 040-6655678).",
+    },
+  },
 });
 
 personSchema.set("toJSON", {
