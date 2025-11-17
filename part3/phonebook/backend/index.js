@@ -19,12 +19,7 @@ app.get("/api/persons", (request, response) => {
 });
 
 app.get("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  const person = phoneBook.find((person) => person.id === id);
-  if (person === undefined) {
-    response.sendStatus(404);
-  }
-  response.json(person);
+  Person.findById(request.params.id).then((person) => response.json(person));
 });
 
 app.post("/api/persons", (request, response) => {
