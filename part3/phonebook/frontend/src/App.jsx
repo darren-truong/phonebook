@@ -35,17 +35,28 @@ const App = () => {
       }
     }
 
-    create({ name: newName, number: newNumber }).then((data) => {
-      setPersons(persons.concat(data));
-      setNewName("");
-      setNewNumber("");
-      setSearch("");
-      setNotification({ message: `Added ${newName}`, isError: false });
-      setTimeout(
-        () => setNotification({ message: null, isError: false }),
-        3000
-      );
-    });
+    create({ name: newName, number: newNumber })
+      .then((data) => {
+        setPersons(persons.concat(data));
+        setNewName("");
+        setNewNumber("");
+        setSearch("");
+        setNotification({ message: `Added ${newName}`, isError: false });
+        setTimeout(
+          () => setNotification({ message: null, isError: false }),
+          3000
+        );
+      })
+      .catch((error) => {
+        setNewName("");
+        setNewNumber("");
+        setSearch("");
+        setNotification({ message: error.response.data.error, isError: true });
+        setTimeout(
+          () => setNotification({ message: null, isError: false }),
+          3000
+        );
+      });
   };
 
   const handleDelete = (person) => {
