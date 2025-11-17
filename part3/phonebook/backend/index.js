@@ -48,25 +48,14 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  if (
-    phoneBook.some(
-      (person) => person.name.toLowerCase() === body.name.toLowerCase()
-    )
-  ) {
-    return response.status(400).json({
-      error: "name must be unique",
-    });
-  }
-
-  const person = {
-    id: String(Math.floor(Math.random() * 1000) + 1),
+  const person = new Person({
     name: body.name,
     number: body.number,
-  };
+  });
 
-  phoneBook = phoneBook.concat(person);
-
-  response.json(person);
+  person.save().then((savedPerson) => {
+    response.json(savedPerson);
+  });
 });
 
 app.delete("/api/persons/:id", (request, response) => {
