@@ -12,10 +12,12 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
 
-app.get("/api/persons", (request, response) => {
-  Person.find({}).then((persons) => {
-    response.json(persons);
-  });
+app.get("/api/persons", (request, response, next) => {
+  Person.find({})
+    .then((persons) => {
+      response.json(persons);
+    })
+    .catch((error) => next(error));
 });
 
 app.get("/api/persons/:id", (request, response, next) => {
@@ -90,13 +92,17 @@ app.delete("/api/persons/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.get("/info", (request, response) => {
-  const date = new Date().toString();
-  const html = `
-    <p>Phonebook has info for ${phoneBook.length} people</p>
-    <p>${date}</p>
-  `;
-  response.send(html);
+app.get("/info", (request, response, next) => {
+  Person.find({})
+    .then((persons) => {
+      const date = new Date().toString();
+      const html = `
+        <p>Phonebook has info for ${persons.length} people</p>
+        <p>${date}</p>
+      `;
+      response.send(html);
+    })
+    .catch((error) => next(error));
 });
 
 const unknownEndpoint = (request, response) => {
