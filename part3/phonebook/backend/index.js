@@ -1,5 +1,7 @@
+const cors = require("cors");
 const express = require("express");
 const morgan = require("morgan");
+
 const app = express();
 
 let phoneBook = [
@@ -25,6 +27,7 @@ let phoneBook = [
   },
 ];
 
+app.use(cors());
 app.use(express.json());
 morgan.token("body", (req) => JSON.stringify(req.body));
 app.use(
@@ -74,7 +77,7 @@ app.post("/api/persons", (request, response) => {
   }
 
   const person = {
-    id: Math.floor(Math.random() * 1000) + 1,
+    id: String(Math.floor(Math.random() * 1000) + 1),
     name: body.name,
     number: body.number,
   };
