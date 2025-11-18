@@ -83,17 +83,25 @@ const App = () => {
           );
         })
         .catch((error) => {
-          setNotification({
-            message: `Information of ${person.name} has already been removed from the server`,
-            isError: true,
-          });
+          if (error.status === 404) {
+            setPersons(persons.filter((p) => p.id !== person.id));
+            setNotification({
+              message: `Information of ${person.name} has already been removed from the server`,
+              isError: true,
+            });
+          } else {
+            setNotification({
+              message: error.response.data.error,
+              isError: true,
+            });
+          }
           setTimeout(
             () => setNotification({ message: null, isError: false }),
             3000
           );
-          setPersons(persons.filter((p) => p.id !== person.id));
           setNewName("");
           setNewNumber("");
+          setSearch("");
         });
     }
   };
