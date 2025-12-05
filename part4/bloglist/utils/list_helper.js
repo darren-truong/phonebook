@@ -49,9 +49,30 @@ const mostBlogs = (blogs) => {
   return authorWithMostBlogs;
 };
 
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) {
+    return null;
+  }
+
+  const authorWithMostLikes = { author: "", likes: 0 };
+
+  blogs.reduce((accumulator, { author, likes }) => {
+    const likesCount = (accumulator.get(author) || 0) + likes;
+    accumulator.set(author, likesCount);
+    if (likesCount >= authorWithMostLikes.likes) {
+      authorWithMostLikes.author = author;
+      authorWithMostLikes.likes = likesCount;
+    }
+    return accumulator;
+  }, new Map());
+
+  return authorWithMostLikes;
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };
