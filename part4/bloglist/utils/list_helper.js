@@ -29,8 +29,29 @@ const favoriteBlog = (blogs) => {
   );
 };
 
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) {
+    return null;
+  }
+
+  const authorWithMostBlogs = { author: "", blogs: 0 };
+
+  blogs.reduce((accumulator, { author }) => {
+    const blogCount = (accumulator.get(author) || 0) + 1;
+    accumulator.set(author, blogCount);
+    if (blogCount >= authorWithMostBlogs.blogs) {
+      authorWithMostBlogs.author = author;
+      authorWithMostBlogs.blogs = blogCount;
+    }
+    return accumulator;
+  }, new Map());
+
+  return authorWithMostBlogs;
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 };
